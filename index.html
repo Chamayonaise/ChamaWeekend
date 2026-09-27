@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ChamaWeekend</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f5fb;
+    --surface: #ffffff;
+    --text: #1f1b2e;
+    --muted: #6f6a80;
+    --line: #ecebf2;
+    --rennes: #e7e5ed;
+    --rennes-text: #9a95a8;
+    --paris-a: #ff2f86;
+    --paris-b: #ff7a2f;
+    --paris-c: #ffc53d;
+    --ok: #129d63;
+    --glow: rgba(255, 47, 134, .45);
+    --soft-a: #ffd6e6;
+    --soft-b: #ffe7cf;
+    --soft-text: #9c3563;
+    --scrim: rgba(20, 10, 30, .45);
+    --radius: 14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #131119;
+      --surface: #1c1924;
+      --text: #f3f0fa;
+      --muted: #a39db3;
+      --line: #2b2735;
+      --rennes: #2a2733;
+      --rennes-text: #6d677d;
+      --ok: #3ddc97;
+      --glow: rgba(255, 47, 134, .35);
+      --soft-a: #4a2a3c;
+      --soft-b: #4a3527;
+      --soft-text: #ffb8d4;
+      --scrim: rgba(0, 0, 0, .6);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #131119;
+    --surface: #1c1924;
+    --text: #f3f0fa;
+    --muted: #a39db3;
+    --line: #2b2735;
+    --rennes: #2a2733;
+    --rennes-text: #6d677d;
+    --ok: #3ddc97;
+    --glow: rgba(255, 47, 134, .35);
+    --soft-a: #4a2a3c;
+    --soft-b: #4a3527;
+    --soft-text: #ffb8d4;
+    --scrim: rgba(0, 0, 0, .6);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Fredoka", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
+
+  /* ---------- En-tête ---------- */
+  header { text-align: center; margin-bottom: 28px; }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 11vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -.02em;
+    background: linear-gradient(100deg, var(--paris-a), var(--paris-b) 55%, var(--paris-c));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .tagline { margin: 6px 0 0; color: var(--muted); font-size: 1.1rem; text-wrap: balance; }
+
+  .next {
+    margin: 24px auto 0;
+    max-width: 560px;
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: linear-gradient(120deg, var(--paris-a), var(--paris-b) 60%, var(--paris-c));
+    color: #fff;
+    box-shadow: 0 18px 40px -18px var(--glow);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-align: left;
+  }
+  .next .big { font-size: 2.6rem; line-height: 1; }
+  .next .label { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; opacity: .9; font-weight: 600; }
+  .next .when { font-size: 1.3rem; font-weight: 600; }
+  .next .count { font-size: 1rem; opacity: .95; }
+
+  .legend {
+    display: flex; justify-content: center; flex-wrap: wrap; gap: 10px 22px;
+    margin: 22px 0 0; padding: 0; list-style: none; color: var(--muted);
+  }
+  .legend li { display: flex; align-items: center; gap: 8px; }
+  .swatch { width: 22px; height: 22px; border-radius: 7px; display: inline-block; flex-shrink: 0; }
+  .swatch.rennes { background: var(--rennes); }
+  .swatch.paris { background: linear-gradient(135deg, var(--paris-a), var(--paris-b) 60%, var(--paris-c)); }
+  .swatch.soft { background: linear-gradient(135deg, var(--soft-a), var(--soft-b)); }
+
+  /* ---------- Mois ---------- */
+  .months {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+    gap: 18px;
+  }
+  .month {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 18px 14px 14px;
+  }
+  .month h2 {
+    margin: 0 0 12px; font-size: 1.3rem; font-weight: 600; text-transform: capitalize; text-align: center;
+  }
+  .dow, .days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+  .dow { margin-bottom: 6px; }
+  .dow span { text-align: center; font-size: .8rem; color: var(--muted); font-weight: 500; }
+
+  .day {
+    position: relative;
+    aspect-ratio: 1;
+    max-width: 100%;
+    border-radius: 10px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font: inherit;
+    font-size: .95rem;
+    font-variant-numeric: tabular-nums;
+    border: 0;
+    padding: 0;
+  }
+  .day.empty { background: transparent; }
+  .day.rennes { background: var(--rennes); color: var(--rennes-text); }
+  .day.past { opacity: .45; }
+  .day.today { outline: 2px solid var(--text); outline-offset: 1px; }
+
+  .day.paris {
+    background: linear-gradient(135deg, var(--paris-a), var(--paris-b) 60%, var(--paris-c));
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px -8px var(--glow);
+    text-shadow: 0 1px 2px rgba(120, 0, 40, .35);
+    transition: transform .18s cubic-bezier(.3, 1.6, .5, 1);
+    animation: glow 2.6s ease-in-out infinite;
+    touch-action: manipulation;
+    z-index: 1;
+  }
+  .day.paris .num { font-size: 1.05rem; line-height: 1; }
+  .day.paris .tag { font-size: .58rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+  .day.paris:active { transform: scale(.94); }
+  .day.paris:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+  .day.paris.added::after {
+    content: "✓";
+    position: absolute; top: -5px; right: -5px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--surface); color: var(--ok);
+    font-size: .7rem; font-weight: 700; text-shadow: none;
+    display: grid; place-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+  }
+  /* Paris en révisions : plus doux */
+  .day.paris.soft {
+    background: linear-gradient(135deg, var(--soft-a), var(--soft-b));
+    color: var(--soft-text);
+    text-shadow: none;
+    box-shadow: none;
+    animation: none;
+  }
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 8px 18px -8px var(--glow); }
+    50% { box-shadow: 0 8px 26px -4px var(--glow); }
+  }
+
+  /* ---------- Liste des week-ends ---------- */
+  .list-card {
+    margin-top: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 20px 16px;
+  }
+  .list-card h2 { margin: 0 0 4px; font-size: 1.3rem; font-weight: 600; }
+  .list-card .sub { margin: 0 0 6px; color: var(--muted); }
+  .list-card .hint { margin: 0 0 14px; color: var(--muted); font-size: .9rem; }
+  .list-card .hint b { color: var(--text); font-weight: 600; }
+  .weekends { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .wk {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    min-height: 56px;
+    padding: 10px 12px 10px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+    text-decoration: none;
+    touch-action: manipulation;
+    transition: border-color .15s, transform .15s;
+  }
+  .wk:active { transform: scale(.98); }
+  .wk:focus-visible { outline: 3px solid var(--paris-a); outline-offset: 2px; }
+  .wk-dates { font-weight: 500; }
+  .wk-dates::before { content: "🗼 "; }
+  .wk.soft .wk-dates::before { content: "📚 "; }
+  .wk-note { display: block; font-size: .85rem; color: var(--muted); font-weight: 400; margin-top: 2px; }
+  .wk.soft:not(.added) .wk-status { background: linear-gradient(120deg, var(--soft-a), var(--soft-b)); color: var(--soft-text); }
+  .wk-status {
+    flex-shrink: 0;
+    font-size: .9rem; font-weight: 600;
+    padding: 8px 14px; border-radius: 999px;
+    background: linear-gradient(120deg, var(--paris-a), var(--paris-b));
+    color: #fff;
+  }
+  .wk.added .wk-status { background: transparent; color: var(--ok); border: 1.5px solid var(--ok); padding: 6.5px 12.5px; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 50px; padding: 12px 18px;
+    border-radius: 999px;
+    border: 0;
+    font: inherit; font-weight: 600; font-size: 1.05rem;
+    text-decoration: none; cursor: pointer;
+    touch-action: manipulation;
+    color: #fff;
+    background: linear-gradient(120deg, var(--paris-a), var(--paris-b) 70%, var(--paris-c));
+    box-shadow: 0 10px 24px -12px var(--glow);
+  }
+  .btn:focus-visible { outline: 3px solid var(--text); outline-offset: 2px; }
+
+  @media (hover: hover) {
+    .day.paris:hover { transform: scale(1.12) rotate(-3deg); }
+    .wk:hover { border-color: var(--paris-a); transform: translateY(-1px); }
+    .btn:hover { transform: translateY(-1px); }
+  }
+
+  /* ---------- Fenêtre d'ajout ---------- */
+  dialog {
+    border: 0; padding: 0;
+    border-radius: 24px;
+    background: var(--surface); color: var(--text);
+    width: min(420px, calc(100vw - 32px));
+    max-width: 100%;
+    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .45);
+  }
+  dialog::backdrop { background: var(--scrim); backdrop-filter: blur(3px); }
+  .dlg { padding: 26px 22px 20px; text-align: center; position: relative; }
+  .dlg .close {
+    position: absolute; top: 8px; right: 8px;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 0; background: transparent; color: var(--muted);
+    font-size: 1.6rem; cursor: pointer; font-family: inherit;
+  }
+  .dlg .close:focus-visible { outline: 3px solid var(--paris-a); }
+  .dlg-emoji { font-size: 3rem; line-height: 1; }
+  .dlg h3 { margin: 8px 0 4px; font-size: 1.5rem; font-weight: 600; }
+  .dlg-dates { margin: 0 0 18px; color: var(--muted); font-size: 1.05rem; }
+  .dlg-note {
+    margin: -6px 0 18px; padding: 12px 14px; border-radius: 14px;
+    background: linear-gradient(135deg, var(--soft-a), var(--soft-b));
+    color: var(--soft-text); font-weight: 500; text-wrap: pretty;
+  }
+  .dlg .btn { width: 100%; }
+  .dlg .hint { margin: 16px 0 0; font-size: .9rem; color: var(--muted); }
+  .dlg .hint b { color: var(--text); font-weight: 600; }
+  .dlg .undo {
+    margin-top: 8px; min-height: 44px; border: 0; background: none; color: var(--muted);
+    font: inherit; font-size: .9rem; text-decoration: underline; cursor: pointer;
+  }
+  .dlg .done-badge { color: var(--ok); font-weight: 600; margin: -8px 0 14px; }
+
+  /* Sur téléphone : la fenêtre remonte depuis le bas de l'écran */
+  @media (max-width: 520px) {
+    dialog {
+      width: 100%;
+      margin: auto 0 0;
+      border-radius: 24px 24px 0 0;
+    }
+    dialog[open] { animation: sheet .25s ease-out; }
+    .dlg { padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  }
+  @keyframes sheet { from { transform: translateY(40px); opacity: .6; } }
+
+  /* ---------- Confettis ---------- */
+  .confetto {
+    position: fixed; top: -48px; z-index: 1000; pointer-events: none;
+    animation: fall 1.9s cubic-bezier(.3, .1, .6, 1) forwards;
+  }
+  @keyframes fall {
+    to { transform: translate(var(--dx), 110vh) rotate(var(--rot)); }
+  }
+
+  footer { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 28px; }
+
+  @media (max-width: 420px) {
+    .wrap { padding-top: 22px; }
+    .month { padding: 16px 10px 12px; }
+    .days, .dow { gap: 4px; }
+    .day { border-radius: 8px; }
+    .day.paris .tag { display: none; }
+    .next { padding: 16px; gap: 12px; }
+    .next .big { font-size: 2rem; }
+    .next .when { font-size: 1.15rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .day.paris { animation: none; }
+    dialog[open] { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>ChamaWeekend</h1>
+    <p class="tagline">Pour prévoir des WE funs ensemble</p>
+
+    <div class="next" id="next" aria-live="polite"></div>
+
+    <ul class="legend">
+      <li><span class="swatch rennes"></span> Rennes</li>
+      <li><span class="swatch paris"></span> Paris : appuie dessus pour l'ajouter</li>
+      <li><span class="swatch soft"></span> Paris en révisions, dispo le soir</li>
+    </ul>
+  </header>
+
+  <main>
+    <div class="months" id="months"></div>
+
+    <section class="list-card">
+      <h2>Mes séjours à Paris</h2>
+      <p class="sub" id="summary"></p>
+      <p class="hint">Google Agenda s'ouvre avec l'événement prêt. Choisis l'agenda <b>« Cham à Paris »</b> puis enregistre.</p>
+      <ul class="weekends" id="weekends"></ul>
+    </section>
+  </main>
+
+  <footer>ChamaWeekend · fait avec 💖 entre deux TGV</footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlg-title">
+  <form method="dialog" class="dlg">
+    <button class="close" value="close" aria-label="Fermer">×</button>
+    <div class="dlg-emoji" id="dlg-emoji">🗼</div>
+    <h3 id="dlg-title">Cham à Paris !</h3>
+    <p class="dlg-dates" id="dlg-dates"></p>
+    <p class="dlg-note" id="dlg-note" hidden></p>
+    <p class="done-badge" id="dlg-done" hidden>✓ Déjà ajouté à ton calendrier</p>
+    <a class="btn" id="dlg-google" target="_blank" rel="noopener">Ajouter à Google Agenda</a>
+    <p class="hint">Dans Google Agenda, choisis l'agenda <b>« Cham à Paris »</b> avant d'enregistrer.</p>
+    <button type="button" class="undo" id="dlg-undo" hidden>Retirer la coche « ajouté »</button>
+  </form>
+</dialog>
+
+<script>
+  // ---- Données ----
+  const CALENDAR_NAME = 'Cham à Paris';
+  const WEEKENDS = [
+    {
+      start: '2026-10-24', end: '2026-10-25', soft: true,
+      note: 'En révisions de partiels à Paris, mais dispo le soir ou pour une sortie vélo 🚲',
+    },
+    { start: '2026-10-31', end: '2026-11-01' },
+    { start: '2026-11-11', end: '2026-11-15' },
+    { start: '2026-11-28', end: '2026-11-29' },
+    { start: '2026-12-12', end: '2026-12-13' },
+  ];
+  const MONTHS = [ { y: 2026, m: 9 }, { y: 2026, m: 10 }, { y: 2026, m: 11 } ]; // mois 0-indexés
+  const STORE_KEY = 'chamaweekend.added';
+
+  // ---- Utilitaires de dates (heure locale, pas de fuseau) ----
+  const parse = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const compact = d => iso(d).replaceAll('-', '');
+  const addDays = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const fmtLong = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const fmtShort = new Intl.DateTimeFormat('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' });
+  const fmtMonth = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' });
+  const todayMidnight = () => { const n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); };
+
+  const parisDays = new Map(); // 'YYYY-MM-DD' -> index du week-end
+  WEEKENDS.forEach((w, i) => {
+    for (let d = parse(w.start); d <= parse(w.end); d = addDays(d, 1)) parisDays.set(iso(d), i);
+  });
+
+  // ---- État "ajouté" (mémorisé dans ce navigateur) ----
+  let added = new Set();
+  try { added = new Set(JSON.parse(localStorage.getItem(STORE_KEY) || '[]')); } catch (e) {}
+  const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify([...added])); } catch (e) {} };
+
+  // ---- Lien Google Agenda (fonctionne sur ordinateur et téléphone) ----
+  function googleUrl(w) {
+    const params = new URLSearchParams({
+      text: w.soft ? `${CALENDAR_NAME} (révisions) 📚` : `${CALENDAR_NAME} 🗼`,
+      dates: `${compact(parse(w.start))}/${compact(addDays(parse(w.end), 1))}`, // fin exclusive
+      details: `${w.note || 'Cham est à Paris ! 🎉'} (ajouté depuis ChamaWeekend)`,
+      location: 'Paris',
+    });
+    return 'https://calendar.google.com/calendar/r/eventedit?' + params.toString();
+  }
+
+  // ---- Rendu du calendrier ----
+  function renderMonths() {
+    const wrap = document.getElementById('months');
+    const today = iso(todayMidnight());
+    wrap.innerHTML = '';
+    for (const { y, m } of MONTHS) {
+      const sec = document.createElement('section');
+      sec.className = 'month';
+      sec.innerHTML = `<h2>${fmtMonth.format(new Date(y, m, 1))}</h2>
+        <div class="dow" aria-hidden="true">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => `<span>${x}</span>`).join('')}</div>`;
+      const grid = document.createElement('div');
+      grid.className = 'days';
+      const offset = (new Date(y, m, 1).getDay() + 6) % 7; // semaine commençant lundi
+      for (let i = 0; i < offset; i++) {
+        const e = document.createElement('span');
+        e.className = 'day empty';
+        grid.appendChild(e);
+      }
+      const nDays = new Date(y, m + 1, 0).getDate();
+      for (let d = 1; d <= nDays; d++) {
+        const date = new Date(y, m, d);
+        const key = iso(date);
+        const wi = parisDays.get(key);
+        let el;
+        if (wi !== undefined) {
+          el = document.createElement('button');
+          el.type = 'button';
+          const w = WEEKENDS[wi];
+          el.className = 'day paris' + (w.soft ? ' soft' : '') + (added.has(w.start) ? ' added' : '');
+          el.dataset.weekend = wi;
+          el.setAttribute('aria-label', `${fmtLong.format(date)} : Paris${w.soft ? ' en révisions' : ''}. Voir le détail et ajouter au calendrier ${CALENDAR_NAME}`);
+          el.innerHTML = `<span class="num">${d}</span><span class="tag">Paris</span>`;
+        } else {
+          el = document.createElement('span');
+          el.className = 'day rennes';
+          el.title = `${fmtLong.format(date)} : Rennes`;
+          el.innerHTML = `<span class="num">${d}</span>`;
+        }
+        if (key < today) el.classList.add('past');
+        if (key === today) el.classList.add('today');
+        grid.appendChild(el);
+      }
+      sec.appendChild(grid);
+      wrap.appendChild(sec);
+    }
+  }
+
+  function rangeLabel(w, fmt) {
+    return `${fmt.format(parse(w.start))} → ${fmt.format(parse(w.end))}`;
+  }
+
+  function renderList() {
+    const ul = document.getElementById('weekends');
+    ul.innerHTML = WEEKENDS.map((w, i) => {
+      const isAdded = added.has(w.start);
+      return `<li><a class="wk${w.soft ? ' soft' : ''}${isAdded ? ' added' : ''}" href="${googleUrl(w)}" target="_blank" rel="noopener" data-add="${i}">
+        <span class="wk-dates">${rangeLabel(w, fmtShort)}${w.soft ? '<span class="wk-note">Révisions de partiels, dispo le soir ou pour du vélo</span>' : ''}</span>
+        <span class="wk-status">${isAdded ? 'Ajouté ✓' : 'Ajouter +'}</span>
+      </a></li>`;
+    }).join('');
+    document.getElementById('summary').textContent =
+      `${WEEKENDS.length} séjours, ${parisDays.size} jours de Paris · ${added.size}/${WEEKENDS.length} dans ton calendrier`;
+  }
+
+  function renderNext() {
+    const box = document.getElementById('next');
+    const t = todayMidnight();
+    const upcoming = WEEKENDS.find(w => parse(w.end) >= t);
+    if (!upcoming) {
+      box.innerHTML = `<span class="big">🚆</span><div><div class="label">Prochain séjour à Paris</div>
+        <div class="when">Rien de prévu… pour l'instant !</div></div>`;
+      return;
+    }
+    const days = Math.round((parse(upcoming.start) - t) / 86400000);
+    const count = days <= 0 ? "C'est maintenant, Cham est à Paris ! 🎉"
+      : days === 1 ? 'Demain ! Prépare la valise 🧳'
+      : `Dans ${days} jours`;
+    const extra = upcoming.soft ? ' · en révisions, dispo le soir 🚲' : '';
+    box.innerHTML = `<span class="big">${upcoming.soft ? '📚' : '🗼'}</span><div>
+      <div class="label">Prochain séjour à Paris</div>
+      <div class="when">${rangeLabel(upcoming, fmtShort)}</div>
+      <div class="count">${count}${extra}</div></div>`;
+  }
+
+  function renderAll() { renderMonths(); renderList(); renderNext(); }
+
+  // ---- Confettis ----
+  function confetti() {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const emojis = ['🎉', '✨', '🥐', '🗼', '💖', '🥳', '🍷'];
+    for (let i = 0; i < 30; i++) {
+      const s = document.createElement('span');
+      s.className = 'confetto';
+      s.textContent = emojis[i % emojis.length];
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.fontSize = 16 + Math.random() * 18 + 'px';
+      s.style.animationDelay = Math.random() * 0.5 + 's';
+      s.style.setProperty('--dx', Math.random() * 160 - 80 + 'px');
+      s.style.setProperty('--rot', Math.random() * 720 - 360 + 'deg');
+      s.addEventListener('animationend', () => s.remove());
+      document.body.appendChild(s);
+    }
+  }
+
+  // ---- Fenêtre d'ajout ----
+  const dlg = document.getElementById('dlg');
+  let current = null;
+
+  function openDialog(i) {
+    current = WEEKENDS[i];
+    const isAdded = added.has(current.start);
+    document.getElementById('dlg-dates').textContent = rangeLabel(current, fmtLong);
+    document.getElementById('dlg-emoji').textContent = current.soft ? '📚' : '🗼';
+    document.getElementById('dlg-title').textContent = current.soft ? 'Cham à Paris, en révisions' : 'Cham à Paris !';
+    const note = document.getElementById('dlg-note');
+    note.textContent = current.note || '';
+    note.hidden = !current.note;
+    document.getElementById('dlg-google').href = googleUrl(current);
+    document.getElementById('dlg-done').hidden = !isAdded;
+    document.getElementById('dlg-undo').hidden = !isAdded;
+    dlg.showModal();
+  }
+
+  function markAdded(w) {
+    added.add(w.start);
+    save();
+    // on laisse le lien s'ouvrir avant de redessiner la page
+    setTimeout(() => {
+      renderAll();
+      if (dlg.open) dlg.close();
+      confetti();
+    }, 50);
+  }
+
+  document.addEventListener('click', e => {
+    const day = e.target.closest('[data-weekend]');
+    if (day) { openDialog(Number(day.dataset.weekend)); return; }
+    const row = e.target.closest('[data-add]');
+    if (row) markAdded(WEEKENDS[Number(row.dataset.add)]);
+  });
+
+  document.getElementById('dlg-google').addEventListener('click', () => markAdded(current));
+
+  document.getElementById('dlg-undo').addEventListener('click', () => {
+    added.delete(current.start);
+    save();
+    renderAll();
+    dlg.close();
+  });
+
+  dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // appui sur le fond
+
+  renderAll();
+</script>
+</body>
+</html>
