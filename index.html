@@ -69,7 +69,7 @@
     background: var(--bg);
     color: var(--text);
     font-family: "Fredoka", system-ui, -apple-system, "Segoe UI", sans-serif;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.4;
   }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 16px 64px; }
@@ -309,16 +309,29 @@
 
   footer { text-align: center; color: var(--muted); font-size: .85rem; margin-top: 28px; }
 
-  @media (max-width: 420px) {
+  /* Téléphone : tout est plus grand, les cases prennent toute la largeur */
+  @media (max-width: 520px) {
+    html { font-size: 18px; }
     .wrap { padding-top: 22px; }
-    .month { padding: 16px 10px 12px; }
-    .days, .dow { gap: 4px; }
-    .day { border-radius: 8px; }
-    .day.paris .tag { display: none; }
+    header { margin-bottom: 22px; }
+    .months { gap: 14px; }
+    .month { padding: 16px 6px 8px; border-radius: 18px; }
+    .month h2 { font-size: 1.35rem; }
+    .days, .dow { gap: 3px; }
+    .dow span { font-size: .85rem; }
+    .day { border-radius: 9px; font-size: 1rem; }
+    .day.paris .num { font-size: 1.15rem; }
+    .day.paris .tag { font-size: .5rem; }
+    .day.paris.added::after { width: 20px; height: 20px; font-size: .7rem; }
     .next { padding: 16px; gap: 12px; }
-    .next .big { font-size: 2rem; }
-    .next .when { font-size: 1.15rem; }
+    .next .big { font-size: 2.2rem; }
+    .next .when { font-size: 1.2rem; }
+    .list-card { padding: 18px 12px; }
   }
+  @media (max-width: 360px) {
+    .day.paris .tag { display: none; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .day.paris { animation: none; }
     dialog[open] { animation: none; }
